@@ -44,6 +44,27 @@ function fm_customize_register( $wp_customize ) {
 	);
 
 	$wp_customize->add_setting(
+		'fm_hero_icon',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			'fm_hero_icon',
+			array(
+				'label'     => __( 'Hero Icon', 'frenchmen' ),
+				'description' => __( 'Select an icon/logo image for the hero section.', 'frenchmen' ),
+				'section'   => 'fm_hero_section',
+				'mime_type' => 'image',
+			)
+		)
+	);
+
+	$wp_customize->add_setting(
 		'fm_hero_title',
 		array(
 			'default'           => 'BlockO',
