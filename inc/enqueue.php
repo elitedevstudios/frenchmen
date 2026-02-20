@@ -19,15 +19,12 @@ function fm_enqueue_assets() {
 		FM_THEME_VERSION
 	);
 
-	// FontAwesome Kit
-	wp_enqueue_script(
-		'fontawesome-kit',
-		'https://kit.fontawesome.com/280CF736-3907-44D6-8BAE-FB609A1C3AF8.js',
+	// FontAwesome CDN (free version)
+	wp_enqueue_style(
+		'fontawesome',
+		'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
 		array(),
-		null,
-		array(
-			'strategy' => 'defer',
-		)
+		'6.5.1'
 	);
 
 	// Main JavaScript

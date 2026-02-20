@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 				scrolling="no" 
 				frameborder="no" 
 				allow="autoplay" 
-				src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/frenchmenparty&color=%23f5c518&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+				src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/frenchmenparty&color=%23f5c518&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
 				title="Frenchmen Radio SoundCloud Player"
 			></iframe>
 		</div>

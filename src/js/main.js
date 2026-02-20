@@ -12,6 +12,9 @@ import '../css/main.css';
  * DOM Ready
  */
 document.addEventListener('DOMContentLoaded', () => {
+	// Mark body as JS-ready for animations
+	document.body.classList.add('js-ready');
+	
 	initHeader();
 	initMobileMenu();
 	initScrollAnimations();
