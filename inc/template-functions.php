@@ -65,17 +65,6 @@ function fm_get_social_links() {
  */
 function fm_get_party_events() {
 	return array(
-		'new_years'   => array(
-			'title'       => "Frenchmen New Year's",
-			'description' => 'Ring in the new year the Frenchmen way.',
-			'main_logo'   => fm_upload( '2025/09/climax.png' ),
-			'events'      => array(
-				array(
-					'name' => 'Climax',
-					'logo' => fm_upload( '2025/09/climax.png' ),
-				),
-			),
-		),
 		'soca_season' => array(
 			'title'       => 'Frenchmen Soca Season',
 			'description' => 'Carnival energy all season.',
@@ -112,6 +101,17 @@ function fm_get_party_events() {
 				array(
 					'name' => 'Foreplay',
 					'logo' => fm_upload( '2025/08/foreplay.png' ),
+				),
+			),
+		),
+		'new_years'   => array(
+			'title'       => "Frenchmen New Year's",
+			'description' => 'Ring in the new year the Frenchmen way.',
+			'main_logo'   => fm_upload( '2025/09/climax.png' ),
+			'events'      => array(
+				array(
+					'name' => 'Climax',
+					'logo' => fm_upload( '2025/09/climax.png' ),
 				),
 			),
 		),

@@ -54,10 +54,12 @@
 
 .fm-featured__card-logo {
 	margin-block-end: var(--fm-space-xl);
+	text-align: center;
 }
 
 .fm-featured__card-logo img {
-	max-inline-size: 200px;
+	max-inline-size: 100%;
+	inline-size: 100%;
 	block-size: auto;
 }
 
