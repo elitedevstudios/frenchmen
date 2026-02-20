@@ -73,6 +73,18 @@
 	text-shadow: 0 4px 30px oklch(0% 0 0 / 0.5);
 }
 
+.fm-hero__title-logo {
+	max-inline-size: 400px;
+	block-size: auto;
+	filter: drop-shadow(0 4px 30px oklch(0% 0 0 / 0.5));
+}
+
+@media (max-inline-size: 600px) {
+	.fm-hero__title-logo {
+		max-inline-size: 280px;
+	}
+}
+
 .fm-hero__actions {
 	display: flex;
 	flex-wrap: wrap;

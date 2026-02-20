@@ -2,6 +2,12 @@
  * Footer Styles
  */
 
+/* Instagram Feed Section */
+.fm-instagram-feed {
+	padding-block: var(--fm-space-3xl);
+	background-color: var(--fm-color-bg-alt);
+}
+
 .fm-footer {
 	background-color: var(--fm-color-bg-dark);
 	color: var(--fm-color-text-inverse);

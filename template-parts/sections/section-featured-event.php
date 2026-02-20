@@ -35,7 +35,7 @@ $ticket_url = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/french
 			</div>
 
 			<div class="fm-featured__image fm-animate" data-animation="fade-left" data-delay="200">
-				<img src="<?php echo esc_url( fm_upload( '2025/08/495147578_1129622175873577_161671484664751743_n.jpg' ) ); ?>" alt="Frenchmen BlockO" loading="lazy">
+				<img src="<?php echo esc_url( fm_upload( '2026/02/WhatsApp-Image-2026-02-17-at-10.35.08-1.jpeg' ) ); ?>" alt="Frenchmen BlockO" loading="lazy">
 			</div>
 		</div>
 	</div>

@@ -11,11 +11,17 @@ $socials = fm_get_social_links();
 ?>
 </main><!-- #content -->
 
+<!-- Elfsight Instagram Feed -->
+<section class="fm-instagram-feed">
+	<script src="https://static.elfsight.com/platform/platform.js" async></script>
+	<div class="elfsight-app-42c7a2a3-de26-4466-bc5c-4a528a356c73" data-elfsight-app-lazy></div>
+</section>
+
 <footer class="fm-footer" id="colophon">
 	<div class="fm-footer__container">
 		<div class="fm-footer__top">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fm-footer__logo" aria-label="<?php esc_attr_e( 'Home', 'frenchmen' ); ?>">
-				<img src="<?php echo esc_url( fm_upload( '2025/08/frenchmen-logo-300x300-1.png' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>">
+				<img src="<?php echo esc_url( fm_upload( '2025/08/Frenchmen-Carnival-Logo-011-300x232-1.png' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>">
 			</a>
 
 			<nav class="fm-footer__nav" aria-label="<?php esc_attr_e( 'Footer Navigation', 'frenchmen' ); ?>">

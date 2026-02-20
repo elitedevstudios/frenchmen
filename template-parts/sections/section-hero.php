@@ -22,7 +22,9 @@ $ticket_url    = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/fre
 
 	<div class="fm-hero__content">
 		<span class="fm-hero__subtitle fm-animate" data-animation="fade-down"><?php echo esc_html( $hero_subtitle ); ?></span>
-		<h1 class="fm-hero__title fm-animate" data-animation="fade-up" data-delay="200"><?php echo esc_html( $hero_title ); ?></h1>
+		<h1 class="fm-hero__title fm-animate" data-animation="fade-up" data-delay="200">
+			<img src="<?php echo esc_url( fm_upload( '2025/08/Blocko.png' ) ); ?>" alt="<?php echo esc_attr( $hero_title ); ?>" class="fm-hero__title-logo">
+		</h1>
 		<div class="fm-hero__actions fm-animate" data-animation="fade-up" data-delay="400">
 			<a href="<?php echo esc_url( $ticket_url ); ?>" class="fm-btn fm-btn--primary fm-btn--lg fm-btn--pulse" target="_blank" rel="noopener">
 				Get Tickets

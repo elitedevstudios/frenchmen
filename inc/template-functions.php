@@ -18,14 +18,13 @@ function fm_asset( $path ) {
 }
 
 /**
- * Get upload URL.
+ * Get upload URL (relative for migration compatibility).
  *
  * @param string $path Path relative to uploads directory.
- * @return string Full URL to upload.
+ * @return string Relative URL to upload.
  */
 function fm_upload( $path ) {
-	$upload_dir = wp_upload_dir();
-	return $upload_dir['baseurl'] . '/' . ltrim( $path, '/' );
+	return '/wp-content/uploads/' . ltrim( $path, '/' );
 }
 
 /**
