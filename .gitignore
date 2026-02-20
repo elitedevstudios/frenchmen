@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build artifacts (keep compiled assets in repo for deployment)
+# assets/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local

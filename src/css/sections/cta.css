@@ -1,0 +1,56 @@
+/**
+ * CTA Section Styles
+ */
+
+.fm-cta {
+	position: relative;
+	padding-block: var(--fm-space-5xl);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-block-size: 400px;
+	overflow: hidden;
+}
+
+.fm-cta__background {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.fm-cta__background img {
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+}
+
+.fm-cta__overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		135deg,
+		oklch(15% 0.03 250 / 0.85),
+		oklch(25% 0.05 85 / 0.85)
+	);
+	background-size: 200% 200%;
+	animation: fm-gradient-shift 10s ease infinite;
+}
+
+.fm-cta__container {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding-inline: var(--fm-container-padding);
+}
+
+.fm-cta__title {
+	font-size: var(--fm-font-size-4xl);
+	font-weight: 900;
+	text-transform: uppercase;
+	color: var(--fm-color-white);
+	text-shadow: 0 4px 30px oklch(0% 0 0 / 0.5);
+	margin-block-end: var(--fm-space-xl);
+}

@@ -1,0 +1,100 @@
+/**
+ * Mobile Navigation Styles
+ */
+
+.fm-mobile-nav {
+	position: fixed;
+	inset: 0;
+	z-index: var(--fm-z-modal);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: var(--fm-space-xl);
+	background-color: var(--fm-color-bg-dark);
+	opacity: 0;
+	visibility: hidden;
+	transition: 
+		opacity var(--fm-transition-base),
+		visibility var(--fm-transition-base);
+}
+
+.fm-mobile-nav.fm-mobile-nav--open {
+	opacity: 1;
+	visibility: visible;
+}
+
+.fm-mobile-nav__close {
+	position: absolute;
+	inset-block-start: var(--fm-space-lg);
+	inset-inline-end: var(--fm-space-lg);
+	font-size: 2rem;
+	color: var(--fm-color-white);
+	transition: 
+		color var(--fm-transition-fast),
+		transform var(--fm-transition-fast);
+}
+
+.fm-mobile-nav__close:hover {
+	color: var(--fm-color-primary);
+	transform: rotate(90deg);
+}
+
+.fm-mobile-nav__list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--fm-space-lg);
+}
+
+.fm-mobile-nav__link {
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-2xl);
+	font-weight: 700;
+	color: var(--fm-color-white);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	transition: color var(--fm-transition-fast);
+}
+
+.fm-mobile-nav__link:hover {
+	color: var(--fm-color-primary);
+}
+
+.fm-mobile-nav__cta {
+	margin-block-start: var(--fm-space-lg);
+}
+
+.fm-mobile-nav__socials {
+	display: flex;
+	align-items: center;
+	gap: var(--fm-space-lg);
+	margin-block-start: var(--fm-space-xl);
+}
+
+.fm-mobile-nav__social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: 50px;
+	block-size: 50px;
+	color: var(--fm-color-white);
+	font-size: 1.5rem;
+	border: 2px solid var(--fm-color-white);
+	border-radius: var(--fm-radius-full);
+	transition: 
+		color var(--fm-transition-fast),
+		background-color var(--fm-transition-fast),
+		border-color var(--fm-transition-fast);
+}
+
+.fm-mobile-nav__social-link:hover {
+	color: var(--fm-color-bg-dark);
+	background-color: var(--fm-color-primary);
+	border-color: var(--fm-color-primary);
+}
+
+/* Body lock when menu is open */
+body.fm-menu-open {
+	overflow: hidden;
+}

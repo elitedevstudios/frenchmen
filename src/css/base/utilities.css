@@ -1,0 +1,68 @@
+/**
+ * Utility Classes
+ */
+
+/* Container */
+.fm-container {
+	inline-size: 100%;
+	max-inline-size: var(--fm-container-max);
+	margin-inline: auto;
+	padding-inline: var(--fm-container-padding);
+}
+
+.fm-container--wide {
+	max-inline-size: var(--fm-container-wide);
+}
+
+/* Section spacing */
+.fm-section {
+	padding-block: var(--fm-space-4xl);
+}
+
+/* Text alignment */
+.fm-text-center {
+	text-align: center;
+}
+
+.fm-text-start {
+	text-align: start;
+}
+
+.fm-text-end {
+	text-align: end;
+}
+
+/* Flex utilities */
+.fm-flex {
+	display: flex;
+}
+
+.fm-flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.fm-flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/* Grid utilities */
+.fm-grid {
+	display: grid;
+}
+
+/* Visually hidden but accessible */
+.fm-visually-hidden {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

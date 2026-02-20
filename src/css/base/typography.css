@@ -1,0 +1,48 @@
+/**
+ * Typography Styles
+ */
+
+h1 {
+	font-size: var(--fm-font-size-5xl);
+	font-weight: 900;
+	letter-spacing: -0.02em;
+	text-transform: uppercase;
+}
+
+h2 {
+	font-size: var(--fm-font-size-4xl);
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+
+h3 {
+	font-size: var(--fm-font-size-2xl);
+	font-weight: 700;
+}
+
+h4 {
+	font-size: var(--fm-font-size-xl);
+	font-weight: 600;
+}
+
+h5 {
+	font-size: var(--fm-font-size-lg);
+	font-weight: 600;
+}
+
+h6 {
+	font-size: var(--fm-font-size-base);
+	font-weight: 600;
+}
+
+.fm-text-gradient {
+	background: linear-gradient(135deg, var(--fm-color-primary), var(--fm-color-accent));
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+strong {
+	font-weight: 600;
+	color: var(--fm-color-primary-dark);
+}

@@ -1,0 +1,43 @@
+/**
+ * Stats Section Styles
+ */
+
+.fm-stats {
+	padding-block: var(--fm-space-3xl);
+	background-color: var(--fm-color-bg-alt);
+}
+
+.fm-stats__container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--fm-space-2xl) var(--fm-space-4xl);
+	max-inline-size: var(--fm-container-max);
+	margin-inline: auto;
+	padding-inline: var(--fm-container-padding);
+}
+
+.fm-stats__item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.fm-stats__number {
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-5xl);
+	font-weight: 900;
+	color: var(--fm-color-primary-dark);
+	line-height: 1;
+}
+
+.fm-stats__label {
+	margin-block-start: var(--fm-space-sm);
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-sm);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--fm-color-text-light);
+}

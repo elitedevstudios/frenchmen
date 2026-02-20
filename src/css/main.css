@@ -1,0 +1,32 @@
+/**
+ * Frenchmen Theme Styles
+ *
+ * @package Frenchmen
+ */
+
+/* Base */
+@import 'base/variables.css';
+@import 'base/reset.css';
+@import 'base/typography.css';
+@import 'base/utilities.css';
+
+/* Components */
+@import 'components/buttons.css';
+@import 'components/header.css';
+@import 'components/footer.css';
+@import 'components/mobile-nav.css';
+
+/* Sections */
+@import 'sections/hero.css';
+@import 'sections/about.css';
+@import 'sections/stats.css';
+@import 'sections/parties.css';
+@import 'sections/featured.css';
+@import 'sections/radio.css';
+@import 'sections/map.css';
+@import 'sections/gallery.css';
+@import 'sections/cta.css';
+@import 'sections/contact.css';
+
+/* Animations */
+@import 'base/animations.css';

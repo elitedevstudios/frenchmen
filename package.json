@@ -1,0 +1,18 @@
+{
+  "name": "frenchmen-theme",
+  "version": "1.0.0",
+  "description": "Custom WordPress theme for Frenchmen Party",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "postcss-import": "^16.1.0",
+    "postcss-nesting": "^12.1.5",
+    "vite": "^5.4.2"
+  }
+}

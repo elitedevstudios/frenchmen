@@ -1,0 +1,126 @@
+/**
+ * CSS Reset & Base Styles
+ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+body {
+	font-family: var(--fm-font-body);
+	font-size: var(--fm-font-size-base);
+	line-height: 1.6;
+	color: var(--fm-color-text);
+	background-color: var(--fm-color-bg);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow-x: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-inline-size: 100%;
+	block-size: auto;
+}
+
+img {
+	image-rendering: -webkit-optimize-contrast;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+	background: none;
+	border: none;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+ul,
+ol {
+	list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--fm-font-heading);
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+p {
+	margin-block-end: var(--fm-space-md);
+}
+
+p:last-child {
+	margin-block-end: 0;
+}
+
+/* Focus styles */
+:focus-visible {
+	outline: 2px solid var(--fm-color-primary);
+	outline-offset: 2px;
+}
+
+/* Screen reader only */
+.screen-reader-text {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.screen-reader-text:focus {
+	position: fixed;
+	inset-block-start: 5px;
+	inset-inline-start: 5px;
+	z-index: var(--fm-z-tooltip);
+	inline-size: auto;
+	block-size: auto;
+	padding: var(--fm-space-md) var(--fm-space-lg);
+	clip: auto;
+	background: var(--fm-color-white);
+	color: var(--fm-color-text);
+	font-size: var(--fm-font-size-sm);
+	font-weight: 600;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

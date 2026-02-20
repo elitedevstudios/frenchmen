@@ -1,0 +1,94 @@
+/**
+ * Featured Event Section Styles
+ */
+
+.fm-featured {
+	padding-block: var(--fm-space-5xl);
+	background-color: var(--fm-color-bg-alt);
+}
+
+.fm-featured__container {
+	max-inline-size: var(--fm-container-max);
+	margin-inline: auto;
+	padding-inline: var(--fm-container-padding);
+}
+
+.fm-featured__header {
+	text-align: center;
+	margin-block-end: var(--fm-space-3xl);
+}
+
+.fm-featured__title {
+	font-size: var(--fm-font-size-3xl);
+	font-weight: 800;
+	text-transform: uppercase;
+	color: var(--fm-color-text);
+}
+
+.fm-featured__subtitle {
+	margin-block-start: var(--fm-space-sm);
+	font-size: var(--fm-font-size-lg);
+	color: var(--fm-color-text-light);
+}
+
+/* Content grid */
+.fm-featured__content {
+	display: grid;
+	gap: var(--fm-space-2xl);
+	align-items: center;
+}
+
+@media (min-width: 768px) {
+	.fm-featured__content {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+/* Card */
+.fm-featured__card {
+	padding: var(--fm-space-2xl);
+	background-color: var(--fm-color-white);
+	border-radius: var(--fm-radius-xl);
+	box-shadow: var(--fm-shadow-lg);
+}
+
+.fm-featured__card-logo {
+	margin-block-end: var(--fm-space-xl);
+}
+
+.fm-featured__card-logo img {
+	max-inline-size: 200px;
+	block-size: auto;
+}
+
+.fm-featured__card-description {
+	margin-block-end: var(--fm-space-xl);
+	font-size: var(--fm-font-size-base);
+	line-height: 1.7;
+	color: var(--fm-color-text);
+}
+
+.fm-featured__card-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--fm-space-md);
+}
+
+/* Image */
+.fm-featured__image {
+	position: relative;
+	border-radius: var(--fm-radius-xl);
+	overflow: hidden;
+}
+
+.fm-featured__image img {
+	inline-size: 100%;
+	block-size: auto;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	transition: transform var(--fm-transition-slow);
+}
+
+.fm-featured__image:hover img {
+	transform: scale(1.05);
+}

@@ -1,0 +1,24 @@
+/**
+ * Map Section Styles
+ */
+
+.fm-map {
+	position: relative;
+	block-size: 450px;
+}
+
+.fm-map__container {
+	position: absolute;
+	inset: 0;
+}
+
+.fm-map__container iframe {
+	inline-size: 100%;
+	block-size: 100%;
+	filter: grayscale(20%) contrast(1.1);
+	transition: filter var(--fm-transition-base);
+}
+
+.fm-map__container:hover iframe {
+	filter: grayscale(0%) contrast(1);
+}
