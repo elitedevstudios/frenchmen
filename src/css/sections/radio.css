@@ -9,43 +9,52 @@
 	overflow: hidden;
 }
 
-/* Animated wave background */
+/* Animated equalizer background */
 .fm-radio__background {
 	position: absolute;
 	inset: 0;
 	overflow: hidden;
-	opacity: 0.3;
+	pointer-events: none;
 }
 
-.fm-radio__wave {
+.fm-radio__equalizer {
 	position: absolute;
 	inset-block-end: 0;
-	inset-inline-start: 0;
-	inline-size: 200%;
-	block-size: 100px;
-	background: repeating-linear-gradient(
-		90deg,
-		transparent,
-		transparent 50px,
-		oklch(100% 0 0 / 0.1) 50px,
-		oklch(100% 0 0 / 0.1) 100px
+	inset-inline: 0;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 8px;
+	block-size: 100%;
+	padding-inline: var(--fm-space-xl);
+}
+
+.fm-radio__bar {
+	flex: 1;
+	max-inline-size: 40px;
+	background: linear-gradient(
+		to top,
+		oklch(83% 0.15 85 / 0.8),
+		oklch(70% 0.12 180 / 0.6)
 	);
+	border-radius: 4px 4px 0 0;
+	animation: fm-equalizer 1.2s ease-in-out infinite;
+	animation-delay: calc(var(--bar-index) * 0.05s);
 }
 
-.fm-radio__wave--1 {
-	animation: fm-wave 8s linear infinite;
-}
-
-.fm-radio__wave--2 {
-	inset-block-end: 30px;
-	animation: fm-wave 12s linear infinite reverse;
-	opacity: 0.5;
-}
-
-.fm-radio__wave--3 {
-	inset-block-end: 60px;
-	animation: fm-wave 10s linear infinite;
-	opacity: 0.3;
+@keyframes fm-equalizer {
+	0%, 100% {
+		block-size: 20%;
+	}
+	25% {
+		block-size: calc(30% + var(--bar-index) * 2%);
+	}
+	50% {
+		block-size: calc(60% + var(--bar-index) * 1.5%);
+	}
+	75% {
+		block-size: calc(40% + var(--bar-index) * 2.5%);
+	}
 }
 
 .fm-radio__container {

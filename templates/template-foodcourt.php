@@ -153,14 +153,13 @@ $vendors = array(
 }
 
 .fm-foodcourt__card-image {
-	aspect-ratio: 1;
 	overflow: hidden;
 }
 
 .fm-foodcourt__card-image img {
 	inline-size: 100%;
-	block-size: 100%;
-	object-fit: cover;
+	block-size: auto;
+	display: block;
 	transition: transform var(--fm-transition-slow);
 }
 

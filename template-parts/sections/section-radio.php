@@ -9,9 +9,11 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <section class="fm-radio" aria-label="<?php esc_attr_e( 'Frenchmen Radio', 'frenchmen' ); ?>">
 	<div class="fm-radio__background">
-		<div class="fm-radio__wave fm-radio__wave--1"></div>
-		<div class="fm-radio__wave fm-radio__wave--2"></div>
-		<div class="fm-radio__wave fm-radio__wave--3"></div>
+		<div class="fm-radio__equalizer">
+			<?php for ( $i = 1; $i <= 20; $i++ ) : ?>
+				<div class="fm-radio__bar" style="--bar-index: <?php echo $i; ?>"></div>
+			<?php endfor; ?>
+		</div>
 	</div>
 
 	<div class="fm-radio__container">

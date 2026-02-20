@@ -31,8 +31,8 @@ $albums = fm_get_gallery_albums();
 					<div class="fm-gallery__card-content">
 						<img src="<?php echo esc_url( $album['logo'] ); ?>" alt="<?php echo esc_attr( $album['title'] ); ?>" class="fm-gallery__card-logo" loading="lazy">
 						<p class="fm-gallery__card-description"><?php echo esc_html( $album['description'] ); ?></p>
-						<a href="<?php echo esc_url( $album['album_url'] ); ?>" class="fm-btn fm-btn--text" target="_blank" rel="noopener">
-							View Album <i class="fa-solid fa-arrow-right"></i>
+						<a href="<?php echo esc_url( $album['album_url'] ); ?>" class="fm-gallery__card-btn" target="_blank" rel="noopener">
+							View Album
 						</a>
 					</div>
 				</article>
