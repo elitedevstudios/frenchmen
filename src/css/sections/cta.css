@@ -19,8 +19,11 @@
 }
 
 .fm-cta__background img {
+	position: fixed;
+	inset-block-start: 0;
+	inset-inline-start: 0;
 	inline-size: 100%;
-	block-size: 100%;
+	block-size: 100vh;
 	object-fit: cover;
 }
 
