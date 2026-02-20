@@ -124,6 +124,33 @@ function fm_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Map Section
+	$wp_customize->add_section(
+		'fm_map_section',
+		array(
+			'title'    => __( 'Map Location', 'frenchmen' ),
+			'priority' => 38,
+		)
+	);
+
+	$wp_customize->add_setting(
+		'fm_map_location',
+		array(
+			'default'           => 'Pearly Beach, Ocho Rios, Jamaica',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	$wp_customize->add_control(
+		'fm_map_location',
+		array(
+			'label'       => __( 'Map Location', 'frenchmen' ),
+			'description' => __( 'Enter the location to display on the map (e.g., Pearly Beach, Ocho Rios, Jamaica).', 'frenchmen' ),
+			'section'     => 'fm_map_section',
+			'type'        => 'text',
+		)
+	);
+
 	// Contact Section
 	$wp_customize->add_section(
 		'fm_contact_section',
