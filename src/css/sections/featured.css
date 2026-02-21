@@ -76,6 +76,17 @@
 	gap: var(--fm-space-md);
 }
 
+@media (max-width: 768px) {
+	.fm-featured__card-actions {
+		flex-direction: column;
+	}
+
+	.fm-featured__card-actions .fm-btn {
+		inline-size: 100%;
+		text-align: center;
+	}
+}
+
 /* Image */
 .fm-featured__image {
 	position: relative;

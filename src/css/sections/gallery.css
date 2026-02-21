@@ -44,7 +44,7 @@
 	}
 }
 
-@media (max-inline-size: 600px) {
+@media (max-width: 768px) {
 	.fm-gallery__grid {
 		grid-template-columns: 1fr;
 	}

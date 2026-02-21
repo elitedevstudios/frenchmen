@@ -4,8 +4,12 @@
 
 .fm-mobile-nav {
 	position: fixed;
-	inset: 0;
-	z-index: var(--fm-z-modal);
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	inline-size: 100%;
+	block-size: 100vh;
+	block-size: 100dvh;
+	z-index: 9999;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
