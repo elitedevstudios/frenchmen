@@ -1,0 +1,202 @@
+/**
+ * Mailing list popup.
+ *
+ * Hand-written (not built by Vite); see the note at the top of
+ * inc/mailing-list.php. Uses the theme tokens from style.css, so it must load
+ * after it, which WordPress does since both are enqueued on wp_enqueue_scripts
+ * and this one is registered later.
+ */
+
+.fm-subscribe {
+	/* Reset UA <dialog> styles. The theme reset zeroes all margins, which
+	   kills the UA's `margin: auto` centring and pins the dialog top-left,
+	   so position and centre it explicitly. */
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	block-size: fit-content;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--fm-color-text-inverse);
+	inline-size: min(30rem, calc(100vw - 2rem)); /* 16px gutter each side at 390. */
+	max-inline-size: none;
+	max-block-size: calc(100dvh - 2rem);
+	overflow: visible;
+}
+
+.fm-subscribe::backdrop {
+	background: oklch(15% 0.03 250 / 0.72);
+	backdrop-filter: blur(4px);
+}
+
+.fm-subscribe__panel {
+	position: relative;
+	padding: var(--fm-space-2xl) var(--fm-space-xl) var(--fm-space-xl);
+	background: var(--fm-color-bg-dark);
+	border: 1px solid oklch(83% 0.15 85 / 0.35);
+	border-radius: var(--fm-radius-xl);
+	box-shadow: var(--fm-shadow-xl), var(--fm-shadow-glow);
+}
+
+.fm-subscribe[open] {
+	animation: fm-subscribe-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fm-subscribe-in {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.98);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fm-subscribe[open] {
+		animation: none;
+	}
+}
+
+.fm-subscribe__close {
+	position: absolute;
+	inset-block-start: var(--fm-space-sm);
+	inset-inline-end: var(--fm-space-sm);
+	display: grid;
+	place-items: center;
+	inline-size: 44px; /* WCAG 2.2 target size. */
+	block-size: 44px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--fm-radius-full);
+	background: transparent;
+	color: var(--fm-color-text-inverse);
+	cursor: pointer;
+	transition: background-color var(--fm-transition-fast), color var(--fm-transition-fast);
+}
+
+.fm-subscribe__close:hover {
+	background: oklch(98% 0.01 85 / 0.1);
+	color: var(--fm-color-primary);
+}
+
+.fm-subscribe__title {
+	margin: 0 0 var(--fm-space-sm);
+	padding-inline-end: var(--fm-space-xl); /* Keep clear of the close button. */
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-2xl);
+	font-weight: 800;
+	line-height: 1.15;
+	text-transform: uppercase;
+	letter-spacing: 0.01em;
+	color: var(--fm-color-primary);
+}
+
+.fm-subscribe__text {
+	margin: 0 0 var(--fm-space-md);
+	font-size: var(--fm-font-size-sm);
+	line-height: 1.6;
+	color: oklch(98% 0.01 85 / 0.82);
+}
+
+.fm-subscribe__form {
+	margin-block-start: var(--fm-space-lg);
+}
+
+.fm-subscribe__row {
+	display: flex;
+	flex-direction: column;
+	gap: var(--fm-space-sm);
+}
+
+@media (min-width: 480px) {
+	.fm-subscribe__row {
+		flex-direction: row;
+	}
+}
+
+.fm-subscribe__input {
+	flex: 1;
+	min-inline-size: 0;
+	min-block-size: 48px;
+	padding: 0 var(--fm-space-md);
+	font: inherit;
+	font-size: 1rem; /* 16px stops iOS zooming into the field on focus. */
+	color: var(--fm-color-text);
+	background: var(--fm-color-white);
+	border: 2px solid transparent;
+	border-radius: var(--fm-radius-md);
+}
+
+.fm-subscribe__input:focus-visible {
+	outline: 3px solid var(--fm-color-primary);
+	outline-offset: 2px;
+}
+
+.fm-subscribe__input[aria-invalid="true"] {
+	border-color: var(--fm-color-accent);
+}
+
+.fm-subscribe__submit {
+	min-block-size: 48px;
+	white-space: nowrap;
+}
+
+.fm-subscribe__submit[disabled] {
+	opacity: 0.6;
+	cursor: wait;
+	transform: none;
+}
+
+.fm-subscribe__status {
+	min-block-size: 1.5em;
+	margin: var(--fm-space-sm) 0 0;
+	font-size: var(--fm-font-size-sm);
+	color: oklch(98% 0.01 85 / 0.9);
+}
+
+.fm-subscribe__status.is-error {
+	color: oklch(80% 0.14 25); /* Lighter coral: >= 4.5:1 on the midnight panel. */
+}
+
+.fm-subscribe.is-done .fm-subscribe__row {
+	display: none;
+}
+
+.fm-subscribe.is-done .fm-subscribe__status {
+	font-size: var(--fm-font-size-base);
+	color: var(--fm-color-primary);
+}
+
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.fm-subscribe__hp {
+	position: absolute;
+	inset-inline-start: -10000px;
+	inline-size: 1px;
+	block-size: 1px;
+	overflow: hidden;
+}
+
+.fm-subscribe__legal {
+	margin: var(--fm-space-md) 0 0;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	color: oklch(98% 0.01 85 / 0.6);
+}
+
+.fm-subscribe__legal a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+/* Floating badge hidden; the notice above satisfies Google's terms. */
+.grecaptcha-badge {
+	visibility: hidden;
+}
+
+/* Footer trigger is a <button> (not a #hash link) so the theme's smooth-scroll
+   handler, which hijacks every a[href^="#"], never touches it. */
+button.fm-footer__link {
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}

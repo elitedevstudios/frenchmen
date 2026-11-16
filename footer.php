@@ -29,6 +29,8 @@ $socials = fm_get_social_links();
 				<a href="#about" class="fm-footer__link">About</a>
 				<a href="#gallery" class="fm-footer__link">Gallery</a>
 				<a href="#contact" class="fm-footer__link">Contact</a>
+				<?php /* Opens the mailing list popup (inc/mailing-list.php). */ ?>
+				<button type="button" class="fm-footer__link" data-fm-subscribe-open aria-haspopup="dialog">Get event updates</button>
 			</nav>
 
 			<div class="fm-footer__socials">

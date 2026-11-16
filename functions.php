@@ -23,3 +23,4 @@ require_once FM_THEME_DIR . '/inc/enqueue.php';
 require_once FM_THEME_DIR . '/inc/template-functions.php';
 require_once FM_THEME_DIR . '/inc/customizer.php';
 require_once FM_THEME_DIR . '/inc/custom-post-types.php';
+require_once FM_THEME_DIR . '/inc/mailing-list.php';
