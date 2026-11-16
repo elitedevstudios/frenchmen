@@ -14,7 +14,7 @@ $socials = fm_get_social_links();
 	<div class="fm-contact__container">
 		<div class="fm-contact__content fm-animate" data-animation="fade-up">
 			<h2 class="fm-contact__title">Stay Connected</h2>
-			<p class="fm-contact__subtitle">VIP requests, inquiries, collabs — and the latest vibes in your inbox.</p>
+			<p class="fm-contact__subtitle">VIP requests, inquiries, collabs, and the latest vibes in your inbox.</p>
 		</div>
 
 		<div class="fm-contact__info fm-animate" data-animation="fade-up" data-delay="100">
