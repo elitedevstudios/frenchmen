@@ -59,6 +59,19 @@ npm run watch  # Watch mode
 
 ## Version History
 
+### [Unreleased, deployed to live 2026-11-16]
+
+#### Added
+- **Mailing list popup** (`inc/mailing-list.php`, `assets/mailing-list/`) - single-email "Get updates on the next event" popup. Opens after 12s or 50% scroll; hidden 14 days after closing, permanently after subscribing; "Get event updates" button in footer nav reopens it. Native `<dialog>`.
+- **Mailing List admin** - `fm_subscriber` post type (admins only, no manual add), Export CSV button (formula-escaped, UTF-8 BOM), Settings page for popup copy/timing and reCAPTCHA v3 keys.
+- **Spam protection** - honeypot, 2s minimum fill time, 5 attempts/IP/10 min rate limit, reCAPTCHA v3 (action + score checked server-side, fails closed) once both keys are saved. No WP nonce on purpose: page cache would freeze it.
+- Popup assets are hand-written and enqueued separately, NOT part of the Vite build.
+
+#### Changed
+- **About section** - em dashes removed from copy; image grid now uses Climax photos (scaled WP sizes).
+- **Contact section** - em dash removed from subtitle.
+- **Food Court page** - 2026 menus per party (Rise Up, NiteCap, Foreplay) with tabs and WebP signs.
+
 ### [1.0.2] - 2026-02-20
 
 #### Fixed
@@ -106,4 +119,53 @@ npm run watch  # Watch mode
 - [x] ~~Food Court page - display full menu item images (not cropped)~~ ✅ v1.0.2
 - [x] ~~Radio section - add equalizer animation effect (like original site)~~ ✅ v1.0.2
 - [x] ~~Gallery section - 3x3 grid, centered content, more defined buttons~~ ✅ v1.0.2
+- [x] ~~Parties section - 3-category grouped layout with admin ordering~~ ✅ v1.0.3
 - [ ] Re-enable scroll animations with proper triggering
+
+---
+
+### [1.0.3] - 2026-03-27
+
+#### Added — Parties Section: 3-Category Layout with Admin Ordering
+
+**New CPT: `fm_party_category`** (WP Admin → Party Categories)
+- Fields: Title, Category Logo (media uploader), Tagline/Description, Display Order
+- Admin list columns: Logo preview, Order, Tagline
+- Change the Order number to reorder categories each season
+
+**Updated CPT: `fm_party`**
+- New **Category** dropdown to assign each party to a category
+- New admin column showing which category each party belongs to
+
+**3 Categories (as confirmed):**
+
+| Order | Category | Tagline | Parties |
+|---|---|---|---|
+| 1 | Frenchmen Soca Season | Carnival energy all season. | BlockO, Rise Up, Lyme |
+| 2 | Frenchmen Weekend | One weekend. Three events. Nonstop energy. | Rise Up, Nitecap, Foreplay |
+| 3 | Frenchmen New Year's | Ring in the new year the Frenchmen way. | Climax |
+
+**Visual layout (from approved design screenshot):**
+- Each category: large category logo centered → row of event logo cards below
+- Event cards: white rounded card, hover lift, optional pulsing UPCOMING badge
+- Categories separated by subtle divider, stack vertically
+
+**Key meta keys added:**
+
+| Meta Key | CPT | Purpose |
+|---|---|---|
+| `_fm_pcat_logo` | `fm_party_category` | Category brand logo attachment ID |
+| `_fm_pcat_description` | `fm_party_category` | Tagline text |
+| `_fm_pcat_order` | `fm_party_category` | Display order (ASC) |
+| `_fm_party_category_id` | `fm_party` | Assigned category post ID |
+
+**Files changed:**
+- `inc/custom-post-types.php` — new CPT + meta boxes + admin columns
+- `inc/template-functions.php` — new `fm_get_party_categories()` function
+- `template-parts/sections/section-parties.php` — rewritten to loop by category
+- `src/css/sections/parties.css` — new category block + logo styles
+
+**Setup required after deploy:**
+1. WP Admin → **Party Categories** → Create the 3 categories with logos, taglines, and order 1/2/3
+2. WP Admin → **Parties** → Edit each party and assign it to a category
+3. Run `npm run build` from `themes/frenchmen/`
