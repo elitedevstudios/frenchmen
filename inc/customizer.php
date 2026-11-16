@@ -118,9 +118,64 @@ function fm_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'fm_ticket_url',
 		array(
-			'label'   => __( 'Main Ticket URL', 'frenchmen' ),
-			'section' => 'fm_tickets_section',
-			'type'    => 'url',
+			'label'       => __( 'Main Ticket URL', 'frenchmen' ),
+			'description' => __( 'Default URL used by all ticket buttons unless overridden below.', 'frenchmen' ),
+			'section'     => 'fm_tickets_section',
+			'type'        => 'url',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'fm_header_ticket_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+
+	$wp_customize->add_control(
+		'fm_header_ticket_url',
+		array(
+			'label'       => __( 'Header Button URL', 'frenchmen' ),
+			'description' => __( 'Leave blank to use the Main Ticket URL above.', 'frenchmen' ),
+			'section'     => 'fm_tickets_section',
+			'type'        => 'url',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'fm_hero_ticket_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+
+	$wp_customize->add_control(
+		'fm_hero_ticket_url',
+		array(
+			'label'       => __( 'Hero Button URL', 'frenchmen' ),
+			'description' => __( 'Leave blank to use the Main Ticket URL above.', 'frenchmen' ),
+			'section'     => 'fm_tickets_section',
+			'type'        => 'url',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'fm_cta_ticket_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+
+	$wp_customize->add_control(
+		'fm_cta_ticket_url',
+		array(
+			'label'       => __( 'CTA Section Button URL', 'frenchmen' ),
+			'description' => __( 'Leave blank to use the Main Ticket URL above.', 'frenchmen' ),
+			'section'     => 'fm_tickets_section',
+			'type'        => 'url',
 		)
 	);
 

@@ -85,3 +85,17 @@ function fm_enqueue_fonts() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'fm_enqueue_fonts' );
+
+/**
+ * Enqueue WordPress media uploader for party CPT admin screens.
+ */
+function fm_admin_enqueue_media( $hook ) {
+	if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
+		return;
+	}
+	$screen = get_current_screen();
+	if ( $screen && in_array( $screen->post_type, array( 'fm_party', 'fm_party_category', 'fm_event' ), true ) ) {
+		wp_enqueue_media();
+	}
+}
+add_action( 'admin_enqueue_scripts', 'fm_admin_enqueue_media' );

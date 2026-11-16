@@ -7,7 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$ticket_url = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$global_ticket = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$ticket_url    = get_theme_mod( 'fm_cta_ticket_url', '' ) ?: $global_ticket;
 ?>
 <section class="fm-cta" aria-label="<?php esc_attr_e( 'Call to Action', 'frenchmen' ); ?>">
 	<div class="fm-cta__background" style="background-image: url('<?php echo esc_url( fm_upload( '2025/10/climax-1.jpg' ) ); ?>');">

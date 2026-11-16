@@ -59,63 +59,126 @@ function fm_get_social_links() {
 }
 
 /**
- * Get party events data.
+ * Get party events data from fm_party CPT.
  *
- * @return array Party events organized by category.
+ * Falls back to empty array if no parties have been created yet.
+ *
+ * @return array Flat list of party data for the parties section template.
  */
 function fm_get_party_events() {
-	return array(
-		'soca_season' => array(
-			'title'       => 'Frenchmen Soca Season',
-			'description' => 'Carnival energy all season.',
-			'main_logo'   => fm_upload( '2025/08/soca-season-logo.png' ),
-			'events'      => array(
-				array(
-					'name'     => 'BlockO',
-					'logo'     => fm_upload( '2025/08/Blocko.png' ),
-					'upcoming' => true,
-				),
-				array(
-					'name' => 'Rise Up',
-					'logo' => fm_upload( '2025/08/Rise-Up.png' ),
-				),
-				array(
-					'name' => 'Lyme',
-					'logo' => fm_upload( '2025/09/fm-lyme-logo.png' ),
-				),
-			),
-		),
-		'weekend'     => array(
-			'title'       => 'Frenchmen Weekend',
-			'description' => 'One weekend. Three events. Nonstop energy.',
-			'main_logo'   => fm_upload( '2025/08/frenchmen-weekend.png' ),
-			'events'      => array(
-				array(
-					'name' => 'Rise Up',
-					'logo' => fm_upload( '2025/08/Rise-Up.png' ),
-				),
-				array(
-					'name' => 'Nitecap',
-					'logo' => fm_upload( '2025/08/nitecap.png' ),
-				),
-				array(
-					'name' => 'Foreplay',
-					'logo' => fm_upload( '2025/08/foreplay.png' ),
-				),
-			),
-		),
-		'new_years'   => array(
-			'title'       => "Frenchmen New Year's",
-			'description' => 'Ring in the new year the Frenchmen way.',
-			'main_logo'   => fm_upload( '2025/09/climax.png' ),
-			'events'      => array(
-				array(
-					'name' => 'Climax',
-					'logo' => fm_upload( '2025/09/climax.png' ),
-				),
-			),
-		),
+	$query = new WP_Query(
+		array(
+			'post_type'      => 'fm_party',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'meta_key'       => '_fm_party_order',
+			'orderby'        => 'meta_value_num',
+			'order'          => 'ASC',
+		)
 	);
+
+	if ( ! $query->have_posts() ) {
+		return array();
+	}
+
+	$parties = array();
+	foreach ( $query->posts as $post ) {
+		$logo_id    = get_post_meta( $post->ID, '_fm_party_logo', true );
+		$logo_url   = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+		$upcoming   = get_post_meta( $post->ID, '_fm_party_upcoming', true );
+		$badge_text = get_post_meta( $post->ID, '_fm_party_badge_text', true );
+
+		$parties[] = array(
+			'id'         => $post->ID,
+			'name'       => get_the_title( $post ),
+			'logo'       => $logo_url,
+			'upcoming'   => (bool) $upcoming,
+			'badge_text' => $badge_text ?: 'Upcoming',
+		);
+	}
+
+	wp_reset_postdata();
+
+	return $parties;
+}
+
+/**
+ * Get party categories with their nested parties.
+ *
+ * Returns categories ordered by _fm_pcat_order. Each category contains
+ * a 'parties' array of the same shape as fm_get_party_events() items.
+ *
+ * @return array Nested array of categories → parties.
+ */
+function fm_get_party_categories() {
+	$cat_query = new WP_Query(
+		array(
+			'post_type'      => 'fm_party_category',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'meta_key'       => '_fm_pcat_order',
+			'orderby'        => 'meta_value_num',
+			'order'          => 'ASC',
+		)
+	);
+
+	if ( ! $cat_query->have_posts() ) {
+		wp_reset_postdata();
+		return array();
+	}
+
+	$categories = array();
+
+	foreach ( $cat_query->posts as $cat_post ) {
+		$logo_id = get_post_meta( $cat_post->ID, '_fm_pcat_logo', true );
+
+		$party_query = new WP_Query(
+			array(
+				'post_type'      => 'fm_party',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'meta_key'       => '_fm_party_order',
+				'orderby'        => 'meta_value_num',
+				'order'          => 'ASC',
+				'meta_query'     => array(
+					array(
+						'key'   => '_fm_party_category_id',
+						'value' => $cat_post->ID,
+					),
+				),
+			)
+		);
+
+		$parties = array();
+		if ( $party_query->have_posts() ) {
+			foreach ( $party_query->posts as $party_post ) {
+				$party_logo_id = get_post_meta( $party_post->ID, '_fm_party_logo', true );
+				$upcoming      = get_post_meta( $party_post->ID, '_fm_party_upcoming', true );
+				$badge_text    = get_post_meta( $party_post->ID, '_fm_party_badge_text', true );
+
+				$parties[] = array(
+					'id'         => $party_post->ID,
+					'name'       => get_the_title( $party_post ),
+					'logo'       => $party_logo_id ? wp_get_attachment_image_url( $party_logo_id, 'full' ) : '',
+					'upcoming'   => (bool) $upcoming,
+					'badge_text' => $badge_text ?: 'Upcoming',
+				);
+			}
+		}
+		wp_reset_postdata();
+
+		$categories[] = array(
+			'id'          => $cat_post->ID,
+			'name'        => get_the_title( $cat_post ),
+			'description' => get_post_meta( $cat_post->ID, '_fm_pcat_description', true ),
+			'logo'        => $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '',
+			'parties'     => $parties,
+		);
+	}
+
+	wp_reset_postdata();
+
+	return $categories;
 }
 
 /**

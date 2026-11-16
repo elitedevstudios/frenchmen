@@ -7,37 +7,48 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$parties = fm_get_party_events();
+$categories = fm_get_party_categories();
+
+if ( empty( $categories ) ) {
+	return;
+}
 ?>
 <section class="fm-parties" id="events" aria-label="<?php esc_attr_e( 'Frenchmen Party Groups', 'frenchmen' ); ?>">
 	<div class="fm-parties__container">
-		<?php foreach ( $parties as $key => $category ) : ?>
+		<?php foreach ( $categories as $category ) : ?>
 			<div class="fm-parties__category fm-animate" data-animation="fade-up">
-				<div class="fm-parties__header">
-					<h3 class="fm-parties__title"><?php echo esc_html( $category['title'] ); ?></h3>
-					<p class="fm-parties__description"><?php echo esc_html( $category['description'] ); ?></p>
-				</div>
 
-				<div class="fm-parties__logos">
-					<?php if ( ! empty( $category['main_logo'] ) ) : ?>
-						<div class="fm-parties__main-logo">
-							<img src="<?php echo esc_url( $category['main_logo'] ); ?>" alt="<?php echo esc_attr( $category['title'] ); ?>" loading="lazy">
-						</div>
+				<?php if ( $category['logo'] ) : ?>
+					<div class="fm-parties__cat-logo">
+						<img src="<?php echo esc_url( $category['logo'] ); ?>" alt="<?php echo esc_attr( $category['name'] ); ?>" loading="lazy">
+					</div>
+					<?php if ( $category['description'] ) : ?>
+						<p class="fm-parties__cat-tagline"><?php echo esc_html( $category['description'] ); ?></p>
 					<?php endif; ?>
+				<?php else : ?>
+					<div class="fm-parties__cat-header">
+						<h2 class="fm-parties__cat-title"><?php echo esc_html( $category['name'] ); ?></h2>
+						<?php if ( $category['description'] ) : ?>
+							<p class="fm-parties__cat-description"><?php echo esc_html( $category['description'] ); ?></p>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 
-					<?php if ( ! empty( $category['events'] ) ) : ?>
-						<div class="fm-parties__event-logos">
-							<?php foreach ( $category['events'] as $event ) : ?>
-								<div class="fm-parties__event <?php echo ! empty( $event['upcoming'] ) ? 'fm-parties__event--upcoming' : ''; ?>">
-									<?php if ( ! empty( $event['upcoming'] ) ) : ?>
-										<span class="fm-parties__upcoming-badge">Upcoming</span>
-									<?php endif; ?>
-									<img src="<?php echo esc_url( $event['logo'] ); ?>" alt="<?php echo esc_attr( $event['name'] ); ?>" class="fm-parties__event-logo" loading="lazy">
-								</div>
-							<?php endforeach; ?>
-						</div>
-					<?php endif; ?>
-				</div>
+				<?php if ( ! empty( $category['parties'] ) ) : ?>
+					<div class="fm-parties__event-logos">
+						<?php foreach ( $category['parties'] as $party ) : ?>
+							<div class="fm-parties__event <?php echo $party['upcoming'] ? 'fm-parties__event--upcoming' : ''; ?>">
+								<?php if ( $party['upcoming'] ) : ?>
+									<span class="fm-parties__upcoming-badge"><?php echo esc_html( $party['badge_text'] ); ?></span>
+								<?php endif; ?>
+								<?php if ( $party['logo'] ) : ?>
+									<img src="<?php echo esc_url( $party['logo'] ); ?>" alt="<?php echo esc_attr( $party['name'] ); ?>" class="fm-parties__event-logo" loading="lazy">
+								<?php endif; ?>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+
 			</div>
 		<?php endforeach; ?>
 	</div>

@@ -1,107 +1,267 @@
 /**
  * Featured Event Section Styles
+ * Supports 1-event (cinematic), 2-event (side-by-side) and 3+ (grid) layouts.
+ *
+ * Column counts come from custom properties set inline by
+ * template-parts/sections/section-featured-event.php:
+ *   --fm-featured-count   total events rendered
+ *   --fm-featured-cols-md columns at >= 640px  (max 2)
+ *   --fm-featured-cols-lg columns at >= 1024px (max 3)
  */
 
 .fm-featured {
-	padding-block: var(--fm-space-5xl);
+	padding-block: var(--fm-space-4xl);
 	background-color: var(--fm-color-bg-alt);
 }
 
 .fm-featured__container {
-	max-inline-size: var(--fm-container-max);
+	max-inline-size: var(--fm-container-wide);
 	margin-inline: auto;
 	padding-inline: var(--fm-container-padding);
 }
 
-.fm-featured__header {
+/* ── Section heading ─────────────────────────────────────── */
+
+.fm-featured__heading {
 	text-align: center;
-	margin-block-end: var(--fm-space-3xl);
+	margin-block-end: var(--fm-space-2xl);
+}
+
+.fm-featured__label {
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	color: var(--fm-color-primary-dark);
+	margin-block-end: var(--fm-space-xs);
 }
 
 .fm-featured__title {
-	font-size: var(--fm-font-size-3xl);
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-2xl);
 	font-weight: 800;
 	text-transform: uppercase;
 	color: var(--fm-color-text);
 }
 
-.fm-featured__subtitle {
-	margin-block-start: var(--fm-space-sm);
-	font-size: var(--fm-font-size-lg);
-	color: var(--fm-color-text-light);
-}
+/* ── Events grid ─────────────────────────────────────────── */
 
-/* Content grid */
-.fm-featured__content {
+/* The grid runs on half-column tracks (2 per visible column). Cards span 2
+   tracks; a short last row starts on an odd half-column so it sits centred. */
+.fm-featured__events {
 	display: grid;
-	gap: var(--fm-space-2xl);
-	align-items: center;
+	gap: var(--fm-space-xl);
+	/* Mobile: 2 tracks = 1 visible column */
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: stretch;
 }
 
-@media (min-width: 768px) {
-	.fm-featured__content {
-		grid-template-columns: 1fr 1fr;
+.fm-featured__event {
+	grid-column: span 2;
+}
+
+/* Single event: constrain width for impact */
+.fm-featured--single .fm-featured__events {
+	max-inline-size: 820px;
+	margin-inline: auto;
+}
+
+/* Tablet: up to 2 columns (never more columns than events) */
+@media (min-width: 640px) {
+	.fm-featured__events {
+		grid-template-columns: repeat(var(--fm-featured-tracks-md, 4), minmax(0, 1fr));
+	}
+
+	.fm-featured__event {
+		grid-column: var(--fm-featured-start-md, auto) / span 2;
 	}
 }
 
-/* Card */
-.fm-featured__card {
-	padding: var(--fm-space-2xl);
+/* Desktop: up to 3 columns — 3 events → 1 row, 9 events → 3x3, etc. */
+@media (min-width: 1024px) {
+	.fm-featured__events {
+		grid-template-columns: repeat(var(--fm-featured-tracks-lg, 6), minmax(0, 1fr));
+	}
+
+	.fm-featured__event {
+		grid-column: var(--fm-featured-start-lg, auto) / span 2;
+	}
+}
+
+/* ── Event card ──────────────────────────────────────────── */
+
+.fm-featured__event {
+	display: flex;
+	flex-direction: column;
 	background-color: var(--fm-color-white);
 	border-radius: var(--fm-radius-xl);
 	box-shadow: var(--fm-shadow-lg);
+	overflow: hidden;
+	transition:
+		transform var(--fm-transition-base),
+		box-shadow var(--fm-transition-base);
 }
 
-.fm-featured__card-logo {
-	margin-block-end: var(--fm-space-xl);
-	text-align: center;
+.fm-featured__event:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--fm-shadow-xl);
 }
 
-.fm-featured__card-logo img {
-	max-inline-size: 100%;
-	inline-size: 100%;
-	block-size: auto;
-}
+/* ── Photo with overlay ──────────────────────────────────── */
 
-.fm-featured__card-description {
-	margin-block-end: var(--fm-space-xl);
-	font-size: var(--fm-font-size-base);
-	line-height: 1.7;
-	color: var(--fm-color-text);
-}
-
-.fm-featured__card-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--fm-space-md);
-}
-
-@media (max-width: 768px) {
-	.fm-featured__card-actions {
-		flex-direction: column;
-	}
-
-	.fm-featured__card-actions .fm-btn {
-		inline-size: 100%;
-		text-align: center;
-	}
-}
-
-/* Image */
-.fm-featured__image {
+.fm-featured__event-photo {
 	position: relative;
-	border-radius: var(--fm-radius-xl);
 	overflow: hidden;
 }
 
-.fm-featured__image img {
+.fm-featured__event-photo img {
 	inline-size: 100%;
 	block-size: auto;
 	aspect-ratio: 4 / 3;
 	object-fit: cover;
+	display: block;
 	transition: transform var(--fm-transition-slow);
 }
 
-.fm-featured__image:hover img {
-	transform: scale(1.05);
+/* Single event gets a wider cinematic ratio */
+.fm-featured--single .fm-featured__event-photo img {
+	aspect-ratio: 16 / 9;
+}
+
+.fm-featured__event:hover .fm-featured__event-photo img {
+	transform: scale(1.04);
+}
+
+/* Gradient overlay darkens bottom of photo */
+.fm-featured__event-photo::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		to bottom,
+		transparent 45%,
+		oklch(15% 0.03 250 / 0.55) 100%
+	);
+	pointer-events: none;
+}
+
+/* ── Party logo badge ────────────────────────────────────── */
+
+/* Circular white badge, floats at bottom-centre of photo,
+   overlapping into the card body for a layered stamp effect */
+.fm-featured__event-logo {
+	position: absolute;
+	inset-block-end: -28px;
+	inset-inline-start: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
+	inline-size: 72px;
+	block-size: 72px;
+	border-radius: var(--fm-radius-full);
+	background-color: var(--fm-color-white);
+	box-shadow: var(--fm-shadow-lg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--fm-space-sm);
+	transition: transform var(--fm-transition-base);
+}
+
+.fm-featured__event:hover .fm-featured__event-logo {
+	transform: translateX(-50%) scale(1.08);
+}
+
+.fm-featured__event-logo img {
+	max-inline-size: 100%;
+	max-block-size: 100%;
+	object-fit: contain;
+	display: block;
+}
+
+/* ── Card body ───────────────────────────────────────────── */
+
+.fm-featured__event-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	padding: var(--fm-space-xl);
+	/* Extra top padding to clear the logo badge overlap */
+	padding-block-start: calc(28px + var(--fm-space-lg));
+	text-align: center;
+}
+
+/* No logo → normal top padding */
+.fm-featured__event-photo:not(:has(> .fm-featured__event-logo)) ~ .fm-featured__event-body {
+	padding-block-start: var(--fm-space-xl);
+}
+
+/* ── Date badge ──────────────────────────────────────────── */
+
+.fm-featured__event-date {
+	display: inline-block;
+	padding: var(--fm-space-xs) var(--fm-space-md);
+	background-color: color-mix(in srgb, var(--fm-color-primary) 18%, transparent);
+	color: var(--fm-color-primary-dark);
+	border-radius: var(--fm-radius-full);
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	margin-block-end: var(--fm-space-md);
+	align-self: center;
+}
+
+/* ── Event title (double layout only) ───────────────────── */
+
+.fm-featured__event-title {
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-xl);
+	font-weight: 800;
+	text-transform: uppercase;
+	color: var(--fm-color-text);
+	margin-block-end: var(--fm-space-sm);
+}
+
+/* Grid layout: tighter cards so 3-across stays readable */
+.fm-featured--grid .fm-featured__event-title {
+	font-size: var(--fm-font-size-lg);
+}
+
+@media (min-width: 1024px) {
+	.fm-featured--grid .fm-featured__event-body {
+		padding: var(--fm-space-lg);
+	}
+
+	/* Keep badge clearance only on cards that actually have a logo */
+	.fm-featured--grid
+		.fm-featured__event-photo:has(> .fm-featured__event-logo)
+		~ .fm-featured__event-body {
+		padding-block-start: calc(28px + var(--fm-space-md));
+	}
+}
+
+/* ── Description ─────────────────────────────────────────── */
+
+.fm-featured__event-description {
+	font-size: var(--fm-font-size-base);
+	line-height: 1.7;
+	color: var(--fm-color-text-light);
+	margin-block-end: var(--fm-space-lg);
+	flex: 1;
+}
+
+/* ── CTA button ──────────────────────────────────────────── */
+
+.fm-featured__event-body .fm-btn {
+	align-self: center;
+	margin-block-start: auto;
+}
+
+@media (max-width: 639px) {
+	.fm-featured__event-body .fm-btn {
+		inline-size: 100%;
+		text-align: center;
+	}
 }

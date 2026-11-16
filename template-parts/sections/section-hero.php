@@ -7,12 +7,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$hero_video    = fm_upload( '2026/02/blocko.mp4' );
+$hero_video    = get_theme_mod( 'fm_hero_video', fm_upload( '2026/02/blocko.mp4' ) );
 $hero_icon_id  = get_theme_mod( 'fm_hero_icon', '' );
 $hero_icon_url = $hero_icon_id ? wp_get_attachment_image_url( $hero_icon_id, 'full' ) : fm_upload( '2025/08/Blocko.png' );
 $hero_title    = get_theme_mod( 'fm_hero_title', 'BlockO' );
 $hero_subtitle = get_theme_mod( 'fm_hero_subtitle', 'Frenchmen Soca Season' );
-$ticket_url    = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$global_ticket = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$ticket_url    = get_theme_mod( 'fm_hero_ticket_url', '' ) ?: $global_ticket;
 ?>
 <section class="fm-hero" id="hero" aria-label="<?php esc_attr_e( 'Frenchmen Hero', 'frenchmen' ); ?>">
 	<div class="fm-hero__video-container">

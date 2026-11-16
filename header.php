@@ -7,7 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$ticket_url = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$global_ticket = get_theme_mod( 'fm_ticket_url', 'https://touchstonelink.com/frenchmen-parties/' );
+$ticket_url    = get_theme_mod( 'fm_header_ticket_url', '' ) ?: $global_ticket;
 $socials    = fm_get_social_links();
 ?>
 <!DOCTYPE html>
