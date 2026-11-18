@@ -59,6 +59,17 @@ npm run watch  # Watch mode
 
 ## Version History
 
+### [Unreleased, deployed to live 2026-11-18]
+
+#### Changed
+- **Mailing list popup now hosts the Constant Contact inline form** ("Frenchmen Standard Sign-Up Form", list "Website Form"). CC script loads only on first open. CC owns fields (email, first/last name required, country), list and spam protection (invisible reCAPTCHA v2). Built-in email form remains as fallback if the CC form ID is cleared in Mailing List > Settings.
+- Popup opens **non-modal** (`dialog.show()`) with its own backdrop, focus trap, Escape and scroll lock: with `showModal()` the reCAPTCHA image challenge (appended to body) was inert and unclickable.
+
+#### Fixed
+- "Show popup" setting was ignored when unticked (localized `"0"` string is truthy).
+- CC IDs in settings are format-validated; malformed input keeps the previous value instead of being stripped into a wrong ID.
+- Focus no longer left on a hidden element after closing an auto-opened popup.
+
 ### [Unreleased, deployed to live 2026-11-16]
 
 #### Added

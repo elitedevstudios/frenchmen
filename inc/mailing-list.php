@@ -3,7 +3,12 @@
  * Mailing List: "Get updates on the next event" popup.
  *
  * Self-contained module:
+ *   - Constant Contact inline form inside the popup (client request
+ *     2026-11-18), signups go straight to their CC list "Website Form"
+ *   - built-in single-email form as FALLBACK, used only if the CC form ID is
+ *     cleared in settings
  *   - fm_subscriber post type (admin-only) that stores one post per email
+ *     from the built-in form
  *   - Mailing List > Settings page (popup copy, timing, reCAPTCHA v3 keys)
  *   - admin-ajax endpoint `fm_subscribe` with layered spam protection
  *   - CSV export of the list
@@ -39,9 +44,23 @@ function fm_ml_settings() {
 		'recaptcha_site'   => '',
 		'recaptcha_secret' => '',
 		'recaptcha_min'    => 0.5,
+		// Constant Contact "Active Forms" account key (`_ctct_m`) and the inline
+		// form ID, from the client's CC embed code. Both are public values that
+		// CC prints into every page that hosts the form; not secrets.
+		'ctct_account'     => '91c91408bfb9a1598fff1209202fb8ad',
+		'ctct_form'        => '7195b2de-da32-4238-a1d5-74e87349a1d4',
 	);
 	$saved = get_option( FM_ML_OPTION, array() );
 	return wp_parse_args( is_array( $saved ) ? $saved : array(), $defaults );
+}
+
+/**
+ * Constant Contact mode: both CC values present. CC then owns the list, the
+ * fields and spam protection (it runs its own invisible reCAPTCHA v2).
+ */
+function fm_ml_ctct_enabled() {
+	$s = fm_ml_settings();
+	return '' !== $s['ctct_account'] && '' !== $s['ctct_form'];
 }
 
 /**
@@ -262,7 +281,29 @@ function fm_ml_sanitize_settings( $input ) {
 		'recaptcha_site'   => trim( sanitize_text_field( $in['recaptcha_site'] ?? '' ) ),
 		'recaptcha_secret' => $secret,
 		'recaptcha_min'    => max( 0.1, min( 0.9, round( (float) ( $in['recaptcha_min'] ?? 0.5 ), 1 ) ) ),
+		// Validate the exact format; a malformed value keeps the old one. (Stripping
+		// bad characters instead was tried and silently produced a wrong-but-valid-
+		// looking ID, which breaks the form with no error.) Empty = switch off.
+		'ctct_account'     => fm_ml_valid_id( $in['ctct_account'] ?? '', '/^[a-f0-9]{32}$/i', $old['ctct_account'], 'account key' ),
+		'ctct_form'        => fm_ml_valid_id( $in['ctct_form'] ?? '', '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i', $old['ctct_form'], 'form ID' ),
 	);
+}
+
+/**
+ * Return $value if empty or matching $pattern; otherwise keep $old and flag it.
+ */
+function fm_ml_valid_id( $value, $pattern, $old, $label ) {
+	$value = trim( (string) $value );
+	if ( '' === $value || preg_match( $pattern, $value ) ) {
+		return strtolower( $value );
+	}
+	add_settings_error(
+		FM_ML_OPTION,
+		'fm_ml_bad_' . sanitize_key( $label ),
+		/* translators: %s: field name */
+		sprintf( __( 'That Constant Contact %s does not look right, so the previous value was kept.', 'frenchmen' ), $label )
+	);
+	return $old;
 }
 
 function fm_ml_settings_page() {
@@ -313,7 +354,31 @@ function fm_ml_settings_page() {
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Google reCAPTCHA v3', 'frenchmen' ); ?></h2>
+			<h2><?php esc_html_e( 'Constant Contact form', 'frenchmen' ); ?></h2>
+			<p><?php
+				printf(
+					/* translators: %s: status */
+					esc_html__( 'Status: %s', 'frenchmen' ),
+					fm_ml_ctct_enabled()
+						? '<strong style="color:#008a20">' . esc_html__( 'On. The popup shows the Constant Contact form and signups go to Constant Contact.', 'frenchmen' ) . '</strong>'
+						: '<strong>' . esc_html__( 'Off. The popup uses the built-in email form below.', 'frenchmen' ) . '</strong>'
+				);
+			?></p>
+			<p class="description"><?php esc_html_e( 'Fields, list and thank-you message for this form are edited in Constant Contact (Sign-up Forms). The popup heading above still shows.', 'frenchmen' ); ?></p>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><label for="fm-ml-ctct-account"><?php esc_html_e( 'Account key (_ctct_m)', 'frenchmen' ); ?></label></th>
+					<td><input id="fm-ml-ctct-account" class="regular-text code" type="text" name="<?php echo esc_attr( $name ); ?>[ctct_account]" value="<?php echo esc_attr( $s['ctct_account'] ); ?>"></td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="fm-ml-ctct-form"><?php esc_html_e( 'Inline form ID', 'frenchmen' ); ?></label></th>
+					<td><input id="fm-ml-ctct-form" class="regular-text code" type="text" name="<?php echo esc_attr( $name ); ?>[ctct_form]" value="<?php echo esc_attr( $s['ctct_form'] ); ?>">
+					<p class="description"><?php esc_html_e( 'Clear this to switch back to the built-in form.', 'frenchmen' ); ?></p></td>
+				</tr>
+			</table>
+
+			<h2><?php esc_html_e( 'Built-in form: Google reCAPTCHA v3', 'frenchmen' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Only used when the Constant Contact form is off.', 'frenchmen' ); ?></p>
 			<p><?php
 				printf(
 					/* translators: %s: status */
@@ -535,7 +600,9 @@ function fm_ml_enqueue() {
 			'delay'       => (int) $s['delay'],
 			'dismissDays' => (int) $s['dismiss_days'],
 			// Site key is public by design; the secret never leaves the server.
-			'siteKey'     => fm_ml_recaptcha_enabled() ? $s['recaptcha_site'] : '',
+			'siteKey'     => ( ! fm_ml_ctct_enabled() && fm_ml_recaptcha_enabled() ) ? $s['recaptcha_site'] : '',
+			'ctctAccount' => fm_ml_ctct_enabled() ? $s['ctct_account'] : '',
+			'ctctScript'  => 'https://static.ctctcdn.com/js/signup-form-widget/current/signup-form-widget.min.js',
 		)
 	);
 }
@@ -549,7 +616,18 @@ add_action( 'wp_enqueue_scripts', 'fm_ml_enqueue' );
 function fm_ml_render_popup() {
 	$s = fm_ml_settings();
 	?>
-	<dialog class="fm-subscribe" id="fm-subscribe" aria-labelledby="fm-subscribe-title">
+	<?php
+	/*
+	 * Opened NON-modal (dialog.show(), not showModal()). Constant Contact's
+	 * invisible reCAPTCHA appends its image challenge to <body>; a modal
+	 * dialog makes everything outside it inert, so that challenge would be
+	 * unclickable and real people could never finish signing up. Modal
+	 * behaviour (backdrop, focus trap, Escape, scroll lock) is done in
+	 * subscribe.js instead.
+	 */
+	?>
+	<div class="fm-subscribe-backdrop" data-fm-subscribe-close hidden></div>
+	<dialog class="fm-subscribe" id="fm-subscribe" aria-labelledby="fm-subscribe-title" aria-modal="true">
 		<div class="fm-subscribe__panel">
 			<button type="button" class="fm-subscribe__close" data-fm-subscribe-close aria-label="<?php esc_attr_e( 'Close', 'frenchmen' ); ?>">
 				<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -560,24 +638,39 @@ function fm_ml_render_popup() {
 				<p class="fm-subscribe__text"><?php echo esc_html( $s['text'] ); ?></p>
 			<?php endif; ?>
 
-			<form class="fm-subscribe__form" novalidate>
-				<label class="screen-reader-text" for="fm-subscribe-email"><?php esc_html_e( 'Email address', 'frenchmen' ); ?></label>
-				<div class="fm-subscribe__row">
-					<input class="fm-subscribe__input" id="fm-subscribe-email" type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email" placeholder="<?php esc_attr_e( 'Your email', 'frenchmen' ); ?>" aria-describedby="fm-subscribe-status">
-					<button class="fm-btn fm-btn--primary fm-subscribe__submit" type="submit"><?php echo esc_html( $s['button'] ); ?></button>
+			<?php if ( fm_ml_ctct_enabled() ) : ?>
+				<?php
+				/*
+				 * Constant Contact inline form. The CC script is injected by
+				 * subscribe.js on first open (not on every page view), finds this
+				 * div and renders the form into it.
+				 */
+				?>
+				<div class="fm-subscribe__ctct">
+					<div class="ctct-inline-form" data-form-id="<?php echo esc_attr( $s['ctct_form'] ); ?>"></div>
+					<p class="fm-subscribe__status" role="status" aria-live="polite"></p>
 				</div>
+			<?php else : ?>
+				<form class="fm-subscribe__form" novalidate>
+					<label class="screen-reader-text" for="fm-subscribe-email"><?php esc_html_e( 'Email address', 'frenchmen' ); ?></label>
+					<div class="fm-subscribe__row">
+						<input class="fm-subscribe__input" id="fm-subscribe-email" type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email" placeholder="<?php esc_attr_e( 'Your email', 'frenchmen' ); ?>" aria-describedby="fm-subscribe-status">
+						<button class="fm-btn fm-btn--primary fm-subscribe__submit" type="submit"><?php echo esc_html( $s['button'] ); ?></button>
+					</div>
 
-				<?php /* Honeypot: off-screen, unfocusable, ignored by password managers. */ ?>
-				<div class="fm-subscribe__hp" aria-hidden="true">
-					<label for="fm-subscribe-website">Website</label>
-					<input id="fm-subscribe-website" type="text" name="fm_website" tabindex="-1" autocomplete="off">
-				</div>
+					<?php /* Honeypot: off-screen, unfocusable, ignored by password managers. */ ?>
+					<div class="fm-subscribe__hp" aria-hidden="true">
+						<label for="fm-subscribe-website">Website</label>
+						<input id="fm-subscribe-website" type="text" name="fm_website" tabindex="-1" autocomplete="off">
+					</div>
 
-				<p class="fm-subscribe__status" id="fm-subscribe-status" role="status" aria-live="polite"></p>
-			</form>
+					<p class="fm-subscribe__status" id="fm-subscribe-status" role="status" aria-live="polite"></p>
+				</form>
 
-			<?php if ( fm_ml_recaptcha_enabled() ) : ?>
-				<?php /* Google requires this notice when the floating badge is hidden. */ ?>
+			<?php endif; ?>
+
+			<?php if ( fm_ml_ctct_enabled() || fm_ml_recaptcha_enabled() ) : ?>
+				<?php /* Google requires this notice when the floating badge is hidden (CC's form uses reCAPTCHA too). */ ?>
 				<p class="fm-subscribe__legal">
 					This site is protected by reCAPTCHA and the Google
 					<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and

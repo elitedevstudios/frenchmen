@@ -13,6 +13,7 @@
 	   so position and centre it explicitly. */
 	position: fixed;
 	inset: 0;
+	z-index: 10001; /* Above the mobile nav (9999); below reCAPTCHA's challenge (2e9). */
 	margin: auto;
 	block-size: fit-content;
 	padding: 0;
@@ -22,12 +23,30 @@
 	inline-size: min(30rem, calc(100vw - 2rem)); /* 16px gutter each side at 390. */
 	max-inline-size: none;
 	max-block-size: calc(100dvh - 2rem);
-	overflow: visible;
+	/* The Constant Contact form (4 fields + consent text) is taller than a
+	   phone screen, so the dialog scrolls inside itself. */
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border-radius: var(--fm-radius-xl);
 }
 
-.fm-subscribe::backdrop {
+/* Own backdrop: the dialog opens non-modal (see inc/mailing-list.php), so the
+   UA ::backdrop never renders. */
+.fm-subscribe-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
 	background: oklch(15% 0.03 250 / 0.72);
 	backdrop-filter: blur(4px);
+}
+
+.fm-subscribe-backdrop[hidden] {
+	display: none;
+}
+
+/* Scroll lock while open, standing in for modal behaviour. */
+html.fm-subscribe-open {
+	overflow: hidden;
 }
 
 .fm-subscribe__panel {
@@ -199,4 +218,119 @@ button.fm-footer__link {
 	border: 0;
 	background: none;
 	cursor: pointer;
+}
+
+/* ── Constant Contact inline form, restyled to the theme ──
+   CC's stylesheet uses `div.ctct-form-embed form.ctct-form-custom ...`
+   selectors; prefixing #fm-subscribe outranks them without !important.
+   CC's own title and description are hidden because the popup heading
+   already says it; its consent (GDPR) text and success message stay. */
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults {
+	padding: 0;
+	background: transparent;
+	color: var(--fm-color-text-inverse);
+	font-family: var(--fm-font-body);
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults * {
+	font-family: var(--fm-font-body);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom > h2.ctct-form-header,
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom > p.ctct-form-text {
+	display: none;
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom div.ctct-form-field {
+	margin: 0 0 var(--fm-space-md);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom label.ctct-form-label {
+	margin-block-end: var(--fm-space-xs);
+	font-size: var(--fm-font-size-sm);
+	font-weight: 500;
+	color: oklch(98% 0.01 85 / 0.9);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom input.ctct-form-element,
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom select.ctct-select-element {
+	min-block-size: 48px;
+	padding: 0 var(--fm-space-md);
+	font-size: 1rem; /* 16px stops iOS zooming into the field on focus. */
+	color: var(--fm-color-text);
+	background-color: var(--fm-color-white);
+	border: 2px solid transparent;
+	border-radius: var(--fm-radius-md);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom input.ctct-form-element:focus,
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom select.ctct-select-element:focus {
+	outline: 3px solid var(--fm-color-primary);
+	outline-offset: 2px;
+	border-color: transparent;
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom button.ctct-form-button {
+	min-block-size: 48px;
+	margin-block-start: var(--fm-space-md);
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-sm);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--fm-color-bg-dark);
+	background-color: var(--fm-color-primary);
+	border: 2px solid var(--fm-color-primary);
+	border-radius: var(--fm-radius-md);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom button.ctct-form-button:hover {
+	background-color: var(--fm-color-primary-dark);
+	border-color: var(--fm-color-primary-dark);
+}
+
+#fm-subscribe div.ctct-form-embed form.ctct-form-custom button.ctct-form-button:focus-visible {
+	outline: 3px solid var(--fm-color-text-inverse);
+	outline-offset: 2px;
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults p.ctct-gdpr-text {
+	margin-block-start: var(--fm-space-sm);
+	font-size: 0.75rem;
+	line-height: 1.5;
+	color: oklch(98% 0.01 85 / 0.7);
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults p.ctct-gdpr-text a.ctct-form-footer-link,
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults p.ctct-form-footer a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults p.ctct-form-footer {
+	margin-block-start: var(--fm-space-md);
+	opacity: 0.7;
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults div.ctct-form-success h2.ctct-form-header {
+	font-family: var(--fm-font-heading);
+	font-size: var(--fm-font-size-xl);
+	font-weight: 800;
+	color: var(--fm-color-primary);
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults div.ctct-form-success p.ctct-form-text {
+	color: oklch(98% 0.01 85 / 0.85);
+}
+
+#fm-subscribe div.ctct-form-embed div.ctct-form-defaults div.ctct-form-success:focus {
+	outline: none;
+}
+
+/* CC's error red (#f5463b, !important) is ~5:1 on the midnight panel: fine. */
+
+/* The status line only matters when it has a message (load failure); empty,
+   it left a gap under CC's footer. */
+.fm-subscribe__ctct .fm-subscribe__status:empty {
+	display: none;
 }
